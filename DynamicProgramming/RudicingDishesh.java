@@ -66,3 +66,33 @@ class Solution {
         return solveTab(satisfaction);
     }
 }
+
+
+class Solution {
+    int solveSO(int[] sati)
+    {
+        int n = sati.length;
+        // int dp[][] = new int[n+1][n+2];
+        int next[] = new int[n+2];
+        int curr[] = new int[n+2];
+
+        for (int index = n - 1; index >= 0; index--) {
+            for (int mul = n; mul >= 1; mul--) {
+                int include = sati[index] * mul + next[mul + 1];
+                int exclude = next[mul];
+                curr[mul] = Math.max(include, exclude);
+            }
+            
+            int[] temp = next;
+            next = curr;
+            curr = temp;
+        }
+
+        return next[1];
+    }
+
+    public int maxSatisfaction(int[] satisfaction) {
+        Arrays.sort(satisfaction);
+        return solveSO(satisfaction);
+    }
+}

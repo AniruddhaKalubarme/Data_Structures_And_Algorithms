@@ -49,12 +49,55 @@ class Solution {
         return Math.max(case1, case2);
     }
 
+    int solveSO(int[] slices) {
+        int n = slices.length;
+        int k = n / 3;
+
+        // Case 1: [0 … n-2]
+        int[] prev1 = new int[k + 1];
+        int[] prev2 = new int[k + 1];
+        int[] curr = new int[k + 1];
+
+        for (int index = n - 2; index >= 0; index--) {
+            for (int pick = k - 1; pick >= 0; pick--) {
+                int take = slices[index] + prev2[pick + 1];
+                int notTake = prev1[pick];
+                curr[pick] = Math.max(take, notTake);
+            }
+            // shift rows
+            prev2 = prev1.clone();
+            prev1 = curr.clone();
+        }
+        int case1 = curr[0];
+
+        // Case 2: [1 … n-1]
+        prev1 = new int[k + 1];
+        prev2 = new int[k + 1];
+        curr = new int[k + 1];
+
+        for (int index = n - 1; index >= 1; index--) {
+            for (int pick = k - 1; pick >= 0; pick--) {
+                int take = slices[index] + prev2[pick + 1];
+                int notTake = prev1[pick];
+                curr[pick] = Math.max(take, notTake);
+            }
+            // shift rows
+            prev2 = prev1.clone();
+            prev1 = curr.clone();
+        }
+        int case2 = curr[0];
+
+        return Math.max(case1, case2);
+    }
+
+
     public int maxSizeSlices(int[] slices) {
-        // int n = slices.length;
-        // int dp[][] = new int[n][n];
-        // int dp1[][] = new int[n][n];
+        int n = slices.length;
+        int dp[][] = new int[n][n];
+        int dp1[][] = new int[n][n];
 
         // return Math.max(solve(slices, 0, n-1, 0, dp1), solve(slices, 1, n, 0, dp));
-        return solveTab(slices);
+        // return solveTab(slices);
+        return solveSO(slices);
     }
 }
